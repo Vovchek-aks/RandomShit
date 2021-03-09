@@ -17,8 +17,9 @@ class Wind:
         #    0 < self.arr_pos[1] < self.size[1]:
         sc.blit(im, self.realPos)
 
-    def update(self, pos):
+    def update(self, pos, d=(0, 0)):
         self.arr_pos = [(self.size[i] / self.sz[i]) * pos[i] for i in [0, 1]]
+        self.arr_pos = [self.arr_pos[j] + d[j] for j in [0, 1]]
         self.realPos = [self.arr_pos[i] + self.pos[i] for i in [0, 1]]
 
 
@@ -54,10 +55,12 @@ font2 = pg.font.Font(None, 48)
 
 ws = []
 s = size
-for i in range(10):
-    w = Wind(s, 0.9)
-    s = [s[j] * 0.9 for j in [0, 1]]
+scale = 0.8
+for i in range(5):
+    w = Wind(s, scale)
+    s = [s[j] * scale for j in [0, 1]]
     ws += [w]
+
 
 while True:
     sc.fill((50, 50, 70))
@@ -67,14 +70,21 @@ while True:
 
         elif event.type == pg.MOUSEMOTION:
             ws[0].update(event.pos)
+            for i in range(1, len(ws)):
+                # ws[i].update([event.pos[j] * (1 + scale**i) for j in [0, 1]])
+                ws[i].update(ws[i - 1].realPos)
 
     # sc.blit(font.render(str(round(clock.get_fps())), False, red), (width - 50, 30))
+    pos = (0, 0)
+    for i in ws:
+        i.draw(pos)
+        pos = [pos[j] + i.pos[j] for j in [0, 1]]
+        # print(pos)
 
-    ws[0].draw((0, 0))
+    # exit()
     #
     # for i in range(len(ws[1:])):
     #     ws[i].update(ws[i-1].arr_pos)
-
 
     pg.display.flip()
     clock.tick(60)
