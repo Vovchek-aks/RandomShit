@@ -2,6 +2,8 @@ from sys import stdout
 
 n = int(input())
 
+print('go')
+
 b = n**2
 c = 0
 
@@ -13,6 +15,7 @@ for x in range(n):
 
 k = c / b
 
+print()
 print(4 * k)
 
 
